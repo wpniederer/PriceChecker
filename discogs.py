@@ -3,7 +3,7 @@ import sys
 
 
 user_agent = 'PriceChecker/0.1'
-discogsclient = discogs_client.Client(user_agent, user_token='pHObzXYCThSWvnlnvGTumPcxPzDVoqoTmavBtpYn')
+discogsclient = discogs_client.Client(user_agent, user_token='')
 
 user_input = input("Enter artist and max price desired").split(' ')
 
