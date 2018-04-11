@@ -1,7 +1,6 @@
 import discogs_client
 import config
 from itertools import islice
-import sys
 
 
 user_agent = ('PriceChecker/0.1' '+https://github.com/wpniederer/PriceChecker')
@@ -14,13 +13,30 @@ user_input = ['The Strokes','Is This It']
 search_results = discogsclient.search(user_input[1], type='release',
         artist=user_input[0], format='album, LP')
 
-num_to_print = 3
-print('\n{:^20s}|{:^20s}|{:^20s}|{:^20s}'.format('Artist', 'Album', 'Year', 'Label'))
-print('{:-^80}'.format('-'))
+num_to_print = 5
+print('\n{:=^100}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
+print('{:^20s}|{:^20s}|{:^20s}|{:^20s}|{:^20s}'.format('Discogs ID', 'Artist', 'Album', 'Year', 'Label'))
+print('{:-^100}'.format('-'))
 for release in islice(search_results, num_to_print):
+    print('{id:^20}|'.format(id=release.id), end='')
     print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
     print('{album:20}|'.format(album=release.title), end='')
-    print('{year:^20}|'.format(year=release.year), end='')
+    if (release.year == 0):
+        print('{message:^20}|'.format(message='Year not given'), end='')
+    else:
+        print('{year:^20}|'.format(year=release.year), end='')
     print('{label:20}'.format(label=', '.join(label.name for label in
                                         release.labels)))
-print('{:-^80}'.format('-'))
+print('{:-^100}'.format('-'))
+
+user_input = 'The Strokes'
+#artist = discogsclient.artist(user_input)
+search_results = discogsclient.search(artist=user_input, type='master', format='album')
+print('\n{:=^100}'.format('Albums by ' + user_input))
+print('{:^20s}|{:^20s}|'.format('Discogs ID', 'Album'))
+print('{:-^100}'.format('-'))
+for release in islice(search_results, num_to_print):
+    print('{id:^20}|'.format(id=release.id), end='')
+    print('{album:20}|'.format(album=release.title))
+print('{:-^100}'.format('-'))
+
