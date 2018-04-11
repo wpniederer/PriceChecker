@@ -3,7 +3,7 @@ import config
 from itertools import islice
 
 
-user_agent = ('PriceChecker/0.1' '+https://github.com/wpniederer/PriceChecker')
+user_agent = ('PriceChecker/1.0' '+https://github.com/wpniederer/PriceChecker')
 utoken = config.user_token
 discogsclient = discogs_client.Client(user_agent, user_token=utoken)
 num_to_print = 30
