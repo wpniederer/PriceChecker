@@ -20,3 +20,4 @@ for release in search_results:
     print (u'\tYear\t: {year}'.format(year=release.year))
     print (u'\tLabels\t: {label}'.format(label=','.join(label.name for label in
                                         release.labels)))
+
