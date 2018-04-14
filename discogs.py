@@ -12,12 +12,11 @@ num_to_print = 155
 sleep_time = 2
 user_input = input("Enter artist and album separated by '|' (artist|album) or just artist to find all albums: ").split('|')
 
-def urlbuilder(artist_name, discogs_id, r_type):
-    translator = str.maketrans('', '', string.punctuation)
-    artist_name = artist_name.translate(translator)
-    url = 'https://www.discogs.com/{artist:}/{type:}/{id:}'.format(artist=artist_name, type=r_type, id=discogs_id)
-    url = url.replace(' ', '-')
-
+def urlbuilder(discogs_id, r_type):
+    #translator = str.maketrans('', '', string.punctuation)
+    #artist_name = artist_name.translate(translator)
+    url = 'https://www.discogs.com/{type:}/{id:}'.format(type=r_type, id=discogs_id)
+    #url = url.replace(' ', '-')
     return url
 
 
@@ -34,15 +33,15 @@ if (len(user_input) == 1):
         search_results = discogsclient.search(artist=user_input, type='release', sort='title', sort_order='asc')
         release_type = 'release'
 
-    print('\n{:=^120}'.format('Albums by ' + user_input))
-    print('{:^60}|{:^60}'.format('Album', 'Link'))
-    print('{:-^120}'.format('-'))
+    print('\n{:=^135}'.format('Albums by ' + user_input))
+    print('{:^90}|{:^45}'.format('Album', 'Link'))
+    print('{:-^135}'.format('-'))
 
     for release in islice(search_results, num_to_print):
         #print('{id:^20}|'.format(id=release.id), end='')
-        print('{album:60}|'.format(album=release.title), end='')
-        print('{url:60}'.format(url=urlbuilder(user_input, release.id, release_type)))
-    print('{:-^120}'.format('-'))
+        print('{album:90}|'.format(album=release.title), end='')
+        print('{url:45}'.format(url=urlbuilder(release.id, release_type)))
+    print('{:-^135}'.format('-'))
 
 elif (len(user_input) == 2):
     # user_input = ['The Strokes','Is This It']
@@ -62,9 +61,10 @@ elif (len(user_input) == 2):
         search_results = discogsclient.search(title=user_input[1], type='release',
                                           artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
 
+    release_type = 'release'
     print('\n{:=^120}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
-    print('{:^20s}|{:^20s}|{:^20s}|{:^20s}|{:^20s}|{:^20s}'
-          .format('Discogs ID', 'Artist', 'Album', 'Year', 'Label', 'Country Released'))
+    print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
+          .format('Artist', 'Album', 'Year', 'Country', 'Link'))
     print('{:-^120}'.format('-'))
 
     for release in islice(search_results, num_to_print):
@@ -72,12 +72,11 @@ elif (len(user_input) == 2):
         print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
         print('{album:20}|'.format(album=release.title), end='')
         if (release.year == 0):
-            print('{message:^20}|'.format(message='Year not given'), end='')
+            print('{message:^14}|'.format(message='Year not given'), end='')
         else:
-            print('{year:^20}|'.format(year=release.year), end='')
-        print('{label:20}|'.format(label=', '.join(label.name for label in
-                                        release.labels)), end='')
-        print('{country:^20}'.format(country=release.country))
+            print('{year:^14}|'.format(year=release.year), end='')
+        print('{country:^9}|'.format(country=release.country),end='')
+        print('{url:45}|'.format(url=urlbuilder(release.id, release_type)))
     print('{:-^120}'.format('-'))
 else:
     print('\nInvalid Input')
