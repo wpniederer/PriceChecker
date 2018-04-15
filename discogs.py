@@ -1,7 +1,8 @@
+# consider giving user to search for all releases vs just albums/masters
+# catch ratelimit error, pause, and continue search after 60 secs
 import discogs_client
 import config
 import time
-import string
 from itertools import islice
 
 
@@ -27,11 +28,11 @@ if (len(user_input) == 1):
                                           sort='title', sort_order='asc')
     release_type = 'master'
 
-    if (len(search_results) == 1 ):
-        print('\nCould not find any albums released by ' + user_input + ',searching for all releases(EPs/Singles/Compilations/etc....)')
-        time.sleep(sleep_time)
-        search_results = discogsclient.search(artist=user_input, type='release', sort='title', sort_order='asc')
-        release_type = 'release'
+    #if (len(search_results) == 0 ):
+        #print('\nCould not find any albums released by ' + user_input + ',searching for all releases(EPs/Singles/Compilations/etc....)')
+        #time.sleep(sleep_time)
+        #search_results = discogsclient.search(artist=user_input, type='release', sort='title', sort_order='asc')
+        #release_type = 'release'
 
     print('\n{:=^135}'.format('Albums by ' + user_input))
     print('{:^90}|{:^45}'.format('Album', 'Link'))
@@ -43,23 +44,36 @@ if (len(user_input) == 1):
         print('{url:45}'.format(url=urlbuilder(release.id, release_type)))
     print('{:-^135}'.format('-'))
 
+    search_results = discogsclient.search(artist=user_input, type='master', format='EP',
+                                          sort='title', sort_order='asc')
+
+    print('\n{:=^135}'.format('EPs by ' + user_input))
+    print('{:^90}|{:^45}'.format('EP', 'Link'))
+    print('{:-^135}'.format('-'))
+
+    for release in islice(search_results, num_to_print):
+        #print('{id:^20}|'.format(id=release.id), end='')
+        print('{album:90}|'.format(album=release.title), end='')
+        print('{url:45}'.format(url=urlbuilder(release.id, release_type)))
+    print('{:-^135}'.format('-'))
+
 elif (len(user_input) == 2):
     # user_input = ['The Strokes','Is This It']
     search_results = discogsclient.search(title=user_input[1], type='release',
-        artist=user_input[0], format='vinyl, album', sort='year', sort_order='asc')
+        artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
 
     if (len(search_results) > 60):
         print('\n{} by {} has over {} releases, mostly likely due to multiple international releases....limiting search to US'
                 .format(user_input[1], user_input[0], len(search_results)))
         time.sleep(sleep_time)
         search_results = discogsclient.search(title=user_input[1], type='release',
-                                          artist=user_input[0], format='vinyl, album', sort='year', sort_order='asc', country='us')
+                                          artist=user_input[0], format='vinyl', sort='year', sort_order='asc', country='us')
 
-    if (len(search_results) == 0):
-        print('\n{} by {} has no releases under the album tag, retrying as a general search of records'.format(user_input[1], user_input[0]))
-        time.sleep(sleep_time)
-        search_results = discogsclient.search(title=user_input[1], type='release',
-                                          artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
+    #if (len(search_results) == 0):
+        #print('\n{} by {} has no releases under the album tag, retrying as a general search of records'.format(user_input[1], user_input[0]))
+        #time.sleep(sleep_time)
+        #search_results = discogsclient.search(title=user_input[1], type='release',
+                                          #artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
 
     release_type = 'release'
     print('\n{:=^120}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
