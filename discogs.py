@@ -1,10 +1,11 @@
 # consider giving user to search for all releases vs just albums/masters
 # catch ratelimit error, pause, and continue search after 60 secs
+# make printing a function so you can continue multiple times if rate limit is reached
 import discogs_client
+from discogs_client import exceptions
+from itertools import islice
 import config
 import time
-from itertools import islice
-
 
 user_agent = ('PriceChecker/1.0' '+https://github.com/wpniederer/PriceChecker')
 utoken = config.discogs_user_token
@@ -81,17 +82,39 @@ elif (len(user_input) == 2):
           .format('Artist', 'Album', 'Year', 'Country', 'Link'))
     print('{:-^120}'.format('-'))
 
-    for release in islice(search_results, num_to_print):
-        #print('{id:^20}|'.format(id=release.id), end='')
-        print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
-        print('{album:20}|'.format(album=release.title), end='')
-        if (release.year == 0):
-            print('{message:^14}|'.format(message='Year not given'), end='')
+    count = 0
+    try:
+        for release in islice(search_results, num_to_print):
+            #print('{id:^20}|'.format(id=release.id), end='')
+            print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
+            print('{album:20}|'.format(album=release.title), end='')
+            if (release.year == 0):
+                print('{message:^14}|'.format(message='Year not given'), end='')
+            else:
+                print('{year:^14}|'.format(year=release.year), end='')
+            print('{country:^9}|'.format(country=release.country),end='')
+            print('{url:45}|'.format(url=urlbuilder(release.id, release_type)))
+            count = count + 1
+        print('{:-^120}'.format('-'))
+    except(exceptions.HTTPError):
+        user_input = input("\nMaxed out number of requests that can be made in a minute...(w)ait or (e)xit: ")
+        if (user_input == 'w'):
+            print('\nWaiting 60 seconds')
+            time.sleep(60)
+            for release in islice(search_results, count + 1, num_to_print):
+                print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
+                print('{album:20}|'.format(album=release.title), end='')
+                if (release.year == 0):
+                    print('{message:^14}|'.format(message='Year not given'), end='')
+                else:
+                    print('{year:^14}|'.format(year=release.year), end='')
+                print('{country:^9}|'.format(country=release.country),end='')
+                print('{url:45}|'.format(url=urlbuilder(release.id, release_type)))
+            print('{:-^120}'.format('-'))
         else:
-            print('{year:^14}|'.format(year=release.year), end='')
-        print('{country:^9}|'.format(country=release.country),end='')
-        print('{url:45}|'.format(url=urlbuilder(release.id, release_type)))
-    print('{:-^120}'.format('-'))
+            print('exiting....')
+            time.sleep(2)
+
 else:
     print('\nInvalid Input')
 
