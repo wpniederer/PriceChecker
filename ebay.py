@@ -6,6 +6,7 @@ max_price = '20'
 min_price = '5'
 condition = 'New'
 num_to_print = '50'
+located_in = 'North America'
 
 
 def searchPrinter(search, search_results):
@@ -18,7 +19,7 @@ def searchPrinter(search, search_results):
         print('{:-^170}'.format('-'))
 
 
-def ebaySearch(search):
+def ebaySearch(search, max_price, min_price, condition, num_to_print, located_in):
     try:
         ebay_client = Finding(siteid='EBAY-US', appid=app_id, config_file=None)
         ebay_client.execute('findItemsAdvanced', {
@@ -29,7 +30,8 @@ def ebaySearch(search):
                 {'name': 'MinPrice', 'value': min_price, 'paramName': 'Currency', 'paramValue': 'USD'},
                 {'name': 'AuctionWithBIN'},
                 {'name': 'Condition', 'value': condition},
-                {'name': 'HideDuplicateItems', 'value': 'true'}
+                {'name': 'HideDuplicateItems', 'value': 'true'},
+                {'name': 'LocatedIn', 'value': located_in}
             ],
             'paginationInput': {
                 'entriesPerPage': num_to_print,
@@ -64,11 +66,6 @@ def ebaySearch(search):
 
 if __name__ == "__main__":
     search = input('Search for: ')
-    search_results = ebaySearch(search)
+    search_results = ebaySearch(search, max_price, min_price, condition, num_to_print, located_in)
     searchPrinter(search, search_results)
-else:
-    import sys
 
-    search = str(sys.argv[1])
-    search_results = ebaySearch(search)
-    searchPrinter(search, search_results)
