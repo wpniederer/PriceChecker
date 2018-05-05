@@ -16,8 +16,8 @@ def urlBuilder(discogs_id, r_type):
     url = 'https://www.discogs.com/{type:}/{id:}'.format(type=r_type, id=discogs_id)
     return url
 
-def albumPrinter(search_results):
-    print('\n{:=^135}'.format('Albums by ' + user_input))
+def albumPrinter(query, search_results):
+    print('\n{:=^135}'.format('Albums by ' + query))
     print('{:^90}|{:^45}'.format('Album', 'Link'))
     print('{:-^135}'.format('-'))
 
@@ -26,8 +26,8 @@ def albumPrinter(search_results):
         print('{url:45}'.format(url=urlBuilder(release.id, 'master')))
     print('{:-^135}'.format('-'))
 
-def epPrinter(search_results):
-    print('\n{:=^135}'.format('EPs by ' + user_input))
+def epPrinter(query, search_results):
+    print('\n{:=^135}'.format('EPs by ' + query))
     print('{:^90}|{:^45}'.format('EP', 'Link'))
     print('{:-^135}'.format('-'))
 
@@ -36,8 +36,8 @@ def epPrinter(search_results):
         print('{url:45}'.format(url=urlBuilder(release.id, 'master')))
     print('{:-^135}'.format('-'))
 
-def recordPrinter(search_results):
-    print('\n{:=^120}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
+def recordPrinter(query, search_results, num_to_print):
+    print('\n{:=^120}'.format('Releases of ' + query[1] + ' by ' + query[0]))
     print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
           .format('Artist', 'Album', 'Year', 'Country', 'Link'))
     print('{:-^120}'.format('-'))
@@ -80,16 +80,16 @@ def discogsArtistSearch(user_input):
     search_results = discogsclient.search(artist=user_input, type='master', format='album',
                                           sort='title', sort_order='asc')
     if (len(search_results) > 0):
-        albumPrinter(search_results)
+        albumPrinter(user_input, search_results)
 
     # EP search
     search_results = discogsclient.search(artist=user_input, type='master', format='EP',
                                           sort='title', sort_order='asc')
     if (len(search_results) > 0):
-        epPrinter(search_results)
+        epPrinter(user_input, search_results)
 
 # record release search
-def discogsRecordSearch(user_input):
+def discogsRecordSearch(user_input, num_to_print):
     search_results = discogsclient.search(title=user_input[1], type='release',
                                           artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
 
@@ -106,7 +106,7 @@ def discogsRecordSearch(user_input):
         search_results = discogsclient.search(title=user_input[1], type='release',
                                               artist=user_input[0], format='vinyl', sort='year', sort_order='asc',
                                               country='us')
-    recordPrinter(search_results)
+    recordPrinter(user_input, search_results, num_to_print)
 
 if __name__ == "__main__":
     user_input = input("Enter artist and album separated by '|' (artist|album) or just artist to find all albums: ").split('|')
@@ -116,23 +116,7 @@ if __name__ == "__main__":
         discogsArtistSearch(user_input)
 
     elif (len(user_input) == 2):
-        discogsRecordSearch(user_input)
-
-    else:
-        print('\nInvalid Input')
-
-else:
-    import sys
-
-    user_input = str(sys.argv[1]).split('-')
-    #user_input.split('|')
-
-    if (len(user_input) == 1):
-        user_input = user_input[0]
-        discogsArtistSearch(user_input)
-
-    elif (len(user_input) == 2):
-        discogsRecordSearch(user_input)
+        discogsRecordSearch(user_input, num_to_print)
 
     else:
         print('\nInvalid Input')

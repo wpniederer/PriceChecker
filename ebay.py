@@ -8,7 +8,7 @@ condition = 'New'
 num_to_print = '50'
 
 
-def printResults(search, search_results):
+def searchPrinter(search, search_results):
     print('\n{:=^170}'.format('Search results for ' + search))
 
     for item in search_results['searchResult']['item']:
@@ -65,10 +65,10 @@ def ebaySearch(search):
 if __name__ == "__main__":
     search = input('Search for: ')
     search_results = ebaySearch(search)
-    printResults(search, search_results)
+    searchPrinter(search, search_results)
 else:
     import sys
 
     search = str(sys.argv[1])
     search_results = ebaySearch(search)
-    printResults(search, search_results)
+    searchPrinter(search, search_results)
