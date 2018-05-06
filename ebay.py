@@ -2,14 +2,9 @@ import config
 from ebaysdk.finding import Connection as Finding
 
 app_id = config.app_id
-max_price = '20'
-min_price = '5'
-condition = 'New'
-num_to_print = '50'
-located_in = 'North America'
 
 
-def searchPrinter(search, search_results):
+def search_printer(search, search_results):
     print('\n{:=^170}'.format('Search results for ' + search))
 
     for item in search_results['searchResult']['item']:
@@ -19,7 +14,7 @@ def searchPrinter(search, search_results):
         print('{:-^170}'.format('-'))
 
 
-def ebaySearch(search, max_price, min_price, condition, num_to_print, located_in):
+def ebay_search(search, max_price, min_price, condition, num_to_print, located_in):
     try:
         ebay_client = Finding(siteid='EBAY-US', appid=app_id, config_file=None)
         ebay_client.execute('findItemsAdvanced', {
@@ -46,26 +41,14 @@ def ebaySearch(search, max_price, min_price, condition, num_to_print, located_in
     return search_results
 
 
-
-#search_results = ebaySearch(search)
-#printResults(search, search_results)
-
-
-###search_results = ebay_client.response.dict()
-###Need to figure out how to prevent searches with no results#####
-#if(len(search_results['searchResult']) == 0):
-#if(search_results['searchResult']):
-    #print('\nNo search results for {}, now exiting...'.format(search))
-    #time.sleep(2)
-    #quit()
-
-#else:
-#print('{:^8}|{:^70}|{:^90}'.format('Price', 'Title','URL'))
-#print('{:=^170}'.format('='))
-
-
 if __name__ == "__main__":
+    max_price = '20'
+    min_price = '5'
+    condition = 'New'
+    num_to_print = '50'
+    located_in = 'North America'
+
     search = input('Search for: ')
-    search_results = ebaySearch(search, max_price, min_price, condition, num_to_print, located_in)
-    searchPrinter(search, search_results)
+    search_results = ebay_search(search, max_price, min_price, condition, num_to_print, located_in)
+    search_printer(search, search_results)
 
