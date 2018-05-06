@@ -9,7 +9,6 @@ import time
 user_agent = ('PriceChecker/1.0' '+https://github.com/wpniederer/PriceChecker')
 utoken = config.discogs_user_token
 discogsclient = discogs_client.Client(user_agent, user_token=utoken)
-num_to_print = 200
 sleep_time = 2
 
 
@@ -116,6 +115,8 @@ def discogs_record_search(user_input, num_to_print):
 
 
 if __name__ == "__main__":
+    num_to_print = 200
+
     user_input = input(
         "Enter artist and album separated by '|' (artist|album) or just artist to find all albums: ").split('|')
 
