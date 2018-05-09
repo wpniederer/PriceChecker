@@ -1,6 +1,7 @@
 # make input reader for gershman
 import ebay
 import discogs
+import tweet
 
 
 # 1st line = where to search from
@@ -12,10 +13,6 @@ import discogs
 # -a (for album search) -r (record release search)
 # -n  +  num: number results to show
 # 2nd line = where to post to
-
-
-# search_results = ebay.ebaySearch()
-# ebay.printResults()
 
 
 def get_input():
@@ -55,6 +52,12 @@ def get_switches(line):
         twitter_switches(line)
     elif (line[1] == '--reddit'):
         reddit_switches(line)
+    elif (line[1] == '--help'):
+        help_switch(line)
+    elif (line[1] == '--synopsis'):
+        synopsis_switch(line)
+    elif (line[1] == '--bat'):
+        bat_switch(line)
     else:
         print("Invalid switch or invalid format for input")
 
@@ -87,7 +90,7 @@ def ebay_switches(line):
         if (switch == '-ww'):
             located_in = 'WorldWide'
 
-    print(num_to_print, condition, max, min, located_in)
+    #print(num_to_print, condition, max, min, located_in)
     search_results = ebay.ebay_search(query, max, min, condition, num_to_print, located_in)
     ebay.search_printer(query, search_results)
 
@@ -109,10 +112,21 @@ def discog_switches(line):
 
 
 def twitter_switches(line):
-    print()
 
 
 def reddit_switches(line):
+    print()
+
+
+def help_switch(line):
+    print()
+
+
+def synopsis_switch(line):
+    print()
+
+
+def bat_switch(line):
     print()
 
 

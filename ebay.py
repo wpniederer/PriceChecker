@@ -1,7 +1,7 @@
 import config
 from ebaysdk.finding import Connection as Finding
 
-app_id = config.app_id
+app_id = config.ebay_app_id
 
 
 def search_printer(search, search_results):
