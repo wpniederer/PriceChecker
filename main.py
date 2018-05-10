@@ -1,7 +1,8 @@
 # make input reader for gershman
 import ebay
 import discogs
-import tweet
+import time
+#import tweet
 
 
 # 1st line = where to search from
@@ -13,7 +14,8 @@ import tweet
 # -a (for album search) -r (record release search)
 # -n  +  num: number results to show
 # 2nd line = where to post to
-
+# --twitter
+#  -d (for get info from
 
 def get_input():
     user_input = []
@@ -104,15 +106,27 @@ def discog_switches(line):
     for switch in switch_list:
         if (switch == '-n'):
             num_to_print = getswitch_modifier(switch_list, '-n')
+            if (num_to_print >= 60):
+                print("A value to print greater than 60 will cause discogs to reject your request. Setting to 50....")
+                time.sleep(2)
+                num_to_print = 50
             # print(num_to_print)
-        if (switch == '-a'):
-            discogs.discogs_artist_search(query)
-        if (switch == '-r'):
-            discogs.discogs_record_search(query.split('|'), num_to_print)
+        if (switch == '-album'):
+            search_results = discogs.discogs_album_search(query)
+            discogs.album_printer(query, search_results)
+        if (switch == '-ep'):
+            search_results = discogs.discogs_ep_search(query)
+            discogs.ep_printer(query, search_results)
+        if (switch == '-rWW'):
+            search_results = discogs.discogs_record_search_ww(query.split('|'), num_to_print)
+            discogs.record_printer(query.split('|'), search_results, num_to_print)
+        if (switch == '-rUS'):
+            search_results = discogs.discogs_record_search_us(query.split('|'), num_to_print)
+            discogs.record_printer(query.split('|'), search_results, num_to_print)
 
 
 def twitter_switches(line):
-
+    print()
 
 def reddit_switches(line):
     print()
@@ -137,7 +151,8 @@ if (len(user_input) == 1):
 
 elif (len(user_input) == 2):
     search_from = parse_input(user_input, 0)
+    get_switches(search_from)
     post_to = parse_input(user_input, 1)
-
+    get_switches(post_to)
 else:
     print('Invalid input, too many lines')

@@ -22,7 +22,7 @@ def album_printer(query, search_results):
     print('{:^90}|{:^45}'.format('Album', 'Link'))
     print('{:-^135}'.format('-'))
 
-    for release in islice(search_results, num_to_print):
+    for release in search_results:
         print('{album:90}|'.format(album=release.title), end='')
         print('{url:45}'.format(url=url_builder(release.id, 'master')))
     print('{:-^135}'.format('-'))
@@ -33,7 +33,7 @@ def ep_printer(query, search_results):
     print('{:^90}|{:^45}'.format('EP', 'Link'))
     print('{:-^135}'.format('-'))
 
-    for release in islice(search_results, num_to_print):
+    for release in search_results:
         print('{album:90}|'.format(album=release.title), end='')
         print('{url:45}'.format(url=url_builder(release.id, 'master')))
     print('{:-^135}'.format('-'))
@@ -71,7 +71,7 @@ def record_printer(query, search_results, num_to_print):
                 continue
 
             else:
-                print('exiting....')
+                print('Maxed out number of requests that can be made in a minute, exiting....')
                 time.sleep(2)
                 break
 
