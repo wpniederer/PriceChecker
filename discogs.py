@@ -57,8 +57,8 @@ def record_printer(query, search_results, num_to_print):
             print('{url:45}'.format(url=url_builder(release.id, 'release')))
 
         except(exceptions.HTTPError):
-            user_input2 = input("\nMaxed out number of requests that can be made in a minute...(w)ait or (e)xit: ")
-            # user_input2 = 'w'
+            #user_input2 = input("\nMaxed out number of requests that can be made in a minute...(w)ait or (e)xit: ")
+            user_input2 = 'e'
 
             if (user_input2 == 'w'):
                 print('\nWaiting 61 seconds\n')
@@ -78,19 +78,18 @@ def record_printer(query, search_results, num_to_print):
     print('{:-^120}'.format('-'))
 
 
-# Artist album/EP search
-def discogs_artist_search(user_input):
+# Artist - album
+def discogs_album_search(user_input):
     # album search
     search_results = discogsclient.search(artist=user_input, type='master', format='album',
                                           sort='title', sort_order='asc')
-    if (len(search_results) > 0):
-        album_printer(user_input, search_results)
+    return search_results
 
-    # EP search
+# Artist - EP search
+def discogs_ep_search(user_input):
     search_results = discogsclient.search(artist=user_input, type='master', format='EP',
                                           sort='title', sort_order='asc')
-    if (len(search_results) > 0):
-        ep_printer(user_input, search_results)
+    return search_results
 
 
 # record release search
@@ -117,12 +116,19 @@ def discogs_record_search(user_input, num_to_print):
 if __name__ == "__main__":
     num_to_print = 200
 
-    user_input = input(
-        "Enter artist and album separated by '|' (artist|album) or just artist to find all albums: ").split('|')
+    user_input = input("Enter artist and album separated by '|' (artist|album) or just artist to find all albums: ").split('|')
 
     if (len(user_input) == 1):
         user_input = user_input[0]
-        discogs_artist_search(user_input)
+
+        search_results = discogs_album_search(user_input)
+        if (len(search_results) > 0):
+            album_printer(user_input, search_results)
+
+        search_results = discogs_ep_search(user_input)
+        if (len(search_results) > 0):
+            ep_printer(user_input, search_results)
+
 
     elif (len(user_input) == 2):
         discogs_record_search(user_input, num_to_print)
