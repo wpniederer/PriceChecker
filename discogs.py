@@ -78,7 +78,7 @@ def record_printer(query, search_results, num_to_print):
     print('{:-^120}'.format('-'))
 
 
-# Artist - album
+# Artist - album search
 def discogs_album_search(user_input):
     # album search
     search_results = discogsclient.search(artist=user_input, type='master', format='album',
@@ -92,25 +92,19 @@ def discogs_ep_search(user_input):
     return search_results
 
 
-# record release search
-def discogs_record_search(user_input, num_to_print):
+# record release search - international
+def discogs_record_search_ww(user_input, num_to_print):
     search_results = discogsclient.search(title=user_input[1], type='release',
                                           artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
+    return search_results
 
-    if (len(search_results) == 0):
-        print('No results for {} by {}.'.format(user_input[0], user_input[1]))
-        time.sleep(2)
-        quit()
 
-    elif (len(search_results) > 60):
-        print(
-            '\n{} by {} has over {} releases, mostly likely due to multiple international releases....limiting search to US'
-                .format(user_input[1], user_input[0], len(search_results)))
-        time.sleep(sleep_time)
-        search_results = discogsclient.search(title=user_input[1], type='release',
-                                              artist=user_input[0], format='vinyl', sort='year', sort_order='asc',
-                                              country='us')
-    record_printer(user_input, search_results, num_to_print)
+# record release search - US
+def discogs_record_search_us(user_input, num_to_print):
+    search_results = discogsclient.search(title=user_input[1], type='release',
+                                          artist=user_input[0], format='vinyl', sort='year', sort_order='asc',
+                                          country='us')
+    return search_results
 
 
 if __name__ == "__main__":
@@ -131,7 +125,23 @@ if __name__ == "__main__":
 
 
     elif (len(user_input) == 2):
-        discogs_record_search(user_input, num_to_print)
+        search_results = discogs_record_search_ww(user_input, num_to_print)
 
+
+        if (len(search_results) == 0):
+            print('No results for {} by {}.'.format(user_input[0], user_input[1]))
+            time.sleep(2)
+            quit()
+
+        elif (len(search_results) > 60):
+            print(
+                '\n{} by {} has over {} releases, mostly likely due to multiple international releases....limiting search to US'
+                    .format(user_input[1], user_input[0], len(search_results)))
+            search_results = discogs_record_search_us(user_input, num_to_print)
+            time.sleep(sleep_time)
+            record_printer(user_input, search_results, num_to_print)
+
+        else:
+            record_printer(user_input, search_results, num_to_print)
     else:
         print('\nInvalid Input')
