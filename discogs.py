@@ -1,4 +1,3 @@
-# consider giving user to search for all releases vs just albums/masters
 # fix issue with space as an input
 import discogs_client
 from discogs_client import exceptions
@@ -93,18 +92,53 @@ def discogs_ep_search(user_input):
 
 
 # record release search - international
-def discogs_record_search_ww(user_input, num_to_print):
+def discogs_record_search_ww(user_input):
     search_results = discogsclient.search(title=user_input[1], type='release',
                                           artist=user_input[0], format='vinyl', sort='year', sort_order='asc')
     return search_results
 
 
 # record release search - US
-def discogs_record_search_us(user_input, num_to_print):
+def discogs_record_search_us(user_input):
     search_results = discogsclient.search(title=user_input[1], type='release',
                                           artist=user_input[0], format='vinyl', sort='year', sort_order='asc',
                                           country='us')
     return search_results
+
+
+def twitter_friendly_release(rando, search_results):
+    relevant_info = []
+
+    for release in islice(search_results, rando, rando + 1):
+        relevant_info.append(release.artists)
+        relevant_info.append(release.title)
+        if (release.year == 0):
+            relevant_info.append("NA")
+        else:
+            relevant_info.append(release.year)
+        relevant_info.append(release.country)
+        relevant_info.append(url_builder(release.id, 'release'))
+    relevant_info.append(len(search_results))
+
+    #print(relevant_info)
+    return relevant_info
+
+
+def twitter_friendly(rando, search_type, search_results):
+    relevant_info = []
+
+    if (search_type == 'EP'):
+        for release in islice(search_results, rando, rando + 1):
+            relevant_info.append(release.title)
+            relevant_info.append(url_builder(release.id, 'master'))
+
+    if (search_type == 'album'):
+        for release in islice(search_results, rando, rando + 1):
+            relevant_info.append(release.title)
+            relevant_info.append(url_builder(release.id, 'master'))
+
+    #print(relevant_info)
+    return relevant_info
 
 
 if __name__ == "__main__":
@@ -122,6 +156,7 @@ if __name__ == "__main__":
         search_results = discogs_ep_search(user_input)
         if (len(search_results) > 0):
             ep_printer(user_input, search_results)
+            #print(twitter_friendly(1, 'EP', search_results))
 
 
     elif (len(user_input) == 2):

@@ -5,18 +5,6 @@ import time
 import random
 
 
-# 1st line = where to search from
-# --where to search from, search query,
-# --ebay
-# -used, -new, -max, -min
-# -n for number of results to show
-# --discogs
-# -a (for album search) -r (record release search)
-# -n  +  num: number results to show
-# 2nd line = where to post to
-# --twitter
-#  -d (for get info from
-
 def get_input():
     user_input = []
     while True:
@@ -50,10 +38,6 @@ def get_switches(line):
         discog_switches(line)
     elif (line[1] == '--ebay'):
         ebay_switches(line)
-    elif (line[1] == '--twitter'):
-        twitter_switches(line)
-    elif (line[1] == '--reddit'):
-        reddit_switches(line)
     elif (line[1] == '--help'):
         help_switch(line)
     elif (line[1] == '--synopsis'):
@@ -101,11 +85,9 @@ def ebay_switches(line):
     ebay.search_printer(query, search_results)
 
     if(twitter is True):
-        #if there aren't enough results for num to print, you go out of range...
-
         while True:
             try:
-                rando = random.randint(1, num_to_print - 3)
+                rando = random.randint(0, num_to_print - 1)
                 relevant_info = ebay.twitter_friendly(rando, search_results)
                 tweet.post_to_twitter(query, relevant_info)
                 break;
@@ -117,12 +99,16 @@ def ebay_switches(line):
         tweet.print_tweet_url()
 
 
-
-
 def discog_switches(line):
     query = line[0]
     switch_list = line[2:]
     num_to_print = 50
+    twitter = False
+    search_results_ep = None
+    search_results_album = None
+    search_results_ww = None
+    search_results_us = None
+    search_type = None
     # print(switch_list)
 
     for switch in switch_list:
@@ -134,24 +120,50 @@ def discog_switches(line):
                 num_to_print = 50
             # print(num_to_print)
         if (switch == '-album'):
-            search_results = discogs.discogs_album_search(query)
-            discogs.album_printer(query, search_results)
+            search_results_album = discogs.discogs_album_search(query)
         if (switch == '-ep'):
-            search_results = discogs.discogs_ep_search(query)
-            discogs.ep_printer(query, search_results)
+            search_results_ep = discogs.discogs_ep_search(query)
         if (switch == '-rWW'):
-            search_results = discogs.discogs_record_search_ww(query.split('|'), num_to_print)
-            discogs.record_printer(query.split('|'), search_results, num_to_print)
+            search_results_ww = discogs.discogs_record_search_ww(query.split('|'))
         if (switch == '-rUS'):
-            search_results = discogs.discogs_record_search_us(query.split('|'), num_to_print)
-            discogs.record_printer(query.split('|'), search_results, num_to_print)
+            search_results_us = discogs.discogs_record_search_us(query.split('|'))
+        if (switch == '--twitter'):
+            twitter = True
 
+    if(search_results_album is not None):
+        discogs.album_printer(query, search_results_album)
+        search_results = search_results_album
+        search_type = 'album'
 
-def twitter_switches(line):
-    print()
+    if(search_results_ep is not None):
+        discogs.ep_printer(query, search_results_ep)
+        search_results = search_results_ep
+        search_type = 'EP'
 
-def reddit_switches(line):
-    print()
+    if(search_results_ww is not None):
+        discogs.record_printer(query.split('|'), search_results_ww, num_to_print)
+        search_results = search_results_ww
+
+    if(search_results_us is not None):
+        discogs.record_printer(query.split('|'), search_results_us, num_to_print)
+        search_results = search_results_us
+
+    if (twitter is True):
+        while True:
+            try:
+                if (search_type is not None):
+                    rando = random.randint(0, len(search_results) - 1)
+                    relevant_info = discogs.twitter_friendly(rando, search_type, search_results)
+                    # tweet.post_to_twitter(query, relevant_info)
+                else:
+                    rando = random.randint(0, len(search_results) - 1)
+                    relevant_info = discogs.twitter_friendly_release(rando, search_results)
+
+                print(relevant_info)
+                break
+            except IndexError:
+                print('invalid index, trying again...')
+
 
 
 def help_switch(line):
@@ -171,10 +183,5 @@ if (len(user_input) == 1):
     search_from = parse_input(user_input, 0)
     get_switches(search_from)
 
-elif (len(user_input) == 2):
-    search_from = parse_input(user_input, 0)
-    get_switches(search_from)
-    post_to = parse_input(user_input, 1)
-    get_switches(post_to)
 else:
     print('Invalid input, too many lines')
