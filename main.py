@@ -1,8 +1,7 @@
-# make input reader for gershman
 import ebay
 import discogs
 import time
-#import tweet
+import tweet
 
 
 # 1st line = where to search from
@@ -77,6 +76,8 @@ def ebay_switches(line):
     max = 20
     min = 10
     located_in = 'North America'
+    twitter = False
+
     # print(switch_list)
 
     for switch in switch_list:
@@ -91,10 +92,19 @@ def ebay_switches(line):
             min = getswitch_modifier(switch_list, '-min')
         if (switch == '-ww'):
             located_in = 'WorldWide'
+        if (switch == '--twitter'):
+            twitter = True
 
     #print(num_to_print, condition, max, min, located_in)
     search_results = ebay.ebay_search(query, max, min, condition, num_to_print, located_in)
     ebay.search_printer(query, search_results)
+
+    if(twitter is True):
+        relevant_info = ebay.ebay_friendly(search_results)
+        tweet.post_to_twitter(query, relevant_info)
+        print("posted")
+
+
 
 
 def discog_switches(line):

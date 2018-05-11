@@ -1,5 +1,6 @@
 import config
 from ebaysdk.finding import Connection as Finding
+from itertools import islice
 
 app_id = config.ebay_app_id
 
@@ -12,6 +13,16 @@ def search_printer(search, search_results):
         print('Price: ${:8}'.format(item['sellingStatus']['currentPrice']['value']))
         print('URL: {:90}'.format(item['viewItemURL']))
         print('{:-^170}'.format('-'))
+
+
+def ebay_friendly(search_results):
+    relevant_info = []
+    for item in islice(search_results['searchResult']['item'], 1):
+        relevant_info.append(item['title'])
+        relevant_info.append(item['sellingStatus']['currentPrice']['value'])
+        relevant_info.append(item['viewItemURL'])
+    return relevant_info
+    #print(relevant_info)
 
 
 def ebay_search(search, max_price, min_price, condition, num_to_print, located_in):
@@ -45,10 +56,12 @@ if __name__ == "__main__":
     max_price = '20'
     min_price = '5'
     condition = 'New'
-    num_to_print = '50'
+    num_to_print = '10'
     located_in = 'North America'
 
     search = input('Search for: ')
     search_results = ebay_search(search, max_price, min_price, condition, num_to_print, located_in)
     search_printer(search, search_results)
+
+    #ebay_friendly(search, search_results)
 
