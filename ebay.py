@@ -9,20 +9,19 @@ def search_printer(search, search_results):
     print('\n{:=^170}'.format('Search results for ' + search))
 
     for item in search_results['searchResult']['item']:
-        print('Title: {:70}'.format(item['title']))
-        print('Price: ${:8}'.format(item['sellingStatus']['currentPrice']['value']))
-        print('URL: {:90}'.format(item['viewItemURL']))
+        print('Title: {}'.format(item['title']))
+        print('Price: ${}'.format(item['sellingStatus']['convertedCurrentPrice']['value']))
+        print('URL: {}'.format(item['viewItemURL']))
         print('{:-^170}'.format('-'))
 
 
-def ebay_friendly(search_results):
+def twitter_friendly(rando, search_results):
     relevant_info = []
-    for item in islice(search_results['searchResult']['item'], 1):
+    for item in islice(search_results['searchResult']['item'], rando, rando + 1):
         relevant_info.append(item['title'])
-        relevant_info.append(item['sellingStatus']['currentPrice']['value'])
+        relevant_info.append(item['sellingStatus']['convertedCurrentPrice']['value'])
         relevant_info.append(item['viewItemURL'])
     return relevant_info
-    #print(relevant_info)
 
 
 def ebay_search(search, max_price, min_price, condition, num_to_print, located_in):
@@ -53,11 +52,11 @@ def ebay_search(search, max_price, min_price, condition, num_to_print, located_i
 
 
 if __name__ == "__main__":
-    max_price = '20'
+    max_price = '100'
     min_price = '5'
     condition = 'New'
     num_to_print = '10'
-    located_in = 'North America'
+    located_in = 'WorldWide'
 
     search = input('Search for: ')
     search_results = ebay_search(search, max_price, min_price, condition, num_to_print, located_in)

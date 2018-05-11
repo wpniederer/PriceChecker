@@ -1,7 +1,8 @@
 import ebay
 import discogs
-import time
 import tweet
+import time
+import random
 
 
 # 1st line = where to search from
@@ -100,9 +101,20 @@ def ebay_switches(line):
     ebay.search_printer(query, search_results)
 
     if(twitter is True):
-        relevant_info = ebay.ebay_friendly(search_results)
-        tweet.post_to_twitter(query, relevant_info)
-        print("posted")
+        #if there aren't enough results for num to print, you go out of range...
+
+        while True:
+            try:
+                rando = random.randint(1, num_to_print - 3)
+                relevant_info = ebay.twitter_friendly(rando, search_results)
+                tweet.post_to_twitter(query, relevant_info)
+                break;
+            except IndexError:
+                print('invalid index, trying again...')
+
+        time.sleep(2)
+        print("Posted to twitter, link to post: ")
+        tweet.print_tweet_url()
 
 
 

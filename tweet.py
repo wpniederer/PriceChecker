@@ -42,12 +42,20 @@ def post_to_twitter(search, info_to_post):
     price = info_to_post[1]
     url = info_to_post[2]
     twitter_client.PostUpdate('Someone searched for ' + search + '! Here is an eBay listing:\n'
-                              + 'Title: ' + title + '\n'
-                              + 'Price: ' + price + '\n'
-                              + 'URL: ' + url)
+                              + 'Listing Title: ' + title + '\n'
+                              + 'Listing Price: $' + price + '\n'
+                              + url)
+
+def print_tweet_url():
+    statuses = twitter_client.GetHomeTimeline(1)
+    status = statuses[0]
+    print(status.urls)
+
 
 #twitter_client.PostUpdate("Bye Miss Chelsea!")
 
 
+#twitter_client.GetUr
 if __name__ == "__main__":
     print("Main")
+    print_tweet_url()
