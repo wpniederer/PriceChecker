@@ -62,5 +62,4 @@ if __name__ == "__main__":
     search_results = ebay_search(search, max_price, min_price, condition, num_to_print, located_in)
     search_printer(search, search_results)
 
-    #ebay_friendly(search, search_results)
 
