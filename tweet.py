@@ -30,7 +30,7 @@ def tweet_discogs_albums(info_to_post):
     album = artist_album[1]
     album = album[1:]
     url = info_to_post[1]
-    twitter_client.PostUpdate('Someone searched for ' + artist + '! Here is some info about the artist:\n'
+    twitter_client.PostUpdate('Someone searched for ' + artist + '!\n'
                                'They have a release titled ' + album + '.\n'
                               + url)
 
@@ -46,22 +46,22 @@ def tweet_discogs_releases(info_to_post, rando, query):
 
     if rando == 1:
         twitter_client.PostUpdate(
-            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '! Here is some info about one of the releases:\n'
-            + 'This particular release of ' + album + ' was released in the year ' + year + ' in ' + add_the(country) + '\n'
+            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
+            + 'This particular release of ' + album + ' was released in the year ' + year + ' in ' + add_the(country) + '.\n'
             + url)
 
     elif rando == 2:
         twitter_client.PostUpdate(
-            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '! Here is some info about the album:\n'
+            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
             + album + ' has ' + num_of_releases + ' rereleases.\n'
-            + 'Here is a link to one of the releases:\n' + url)
+            + 'Check out this release on discogs!\n' + url)
 
 
 def tweet_ebay_search(search, info_to_post):
     title = info_to_post[0]
     price = info_to_post[1]
     url = info_to_post[2]
-    twitter_client.PostUpdate('Someone searched for ' + search + '! Here is an eBay listing:\n'
+    twitter_client.PostUpdate('Someone searched for ' + search + '! Click the link to find it on eBay!\n'
                               + 'Listing Title: ' + title + '\n'
                               + 'Listing Price: $' + price + '\n'
                               + url)

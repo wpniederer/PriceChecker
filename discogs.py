@@ -1,4 +1,3 @@
-# fix issue with space as an input
 import discogs_client
 from discogs_client import exceptions
 from itertools import islice

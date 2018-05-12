@@ -83,7 +83,7 @@ def ebay_switches(line):
                 relevant_info = ebay.twitter_friendly(rando, search_results)
                 twitter.tweet_ebay_search(query, relevant_info)
                 break;
-                
+
             except IndexError:
                 print('invalid index, trying again...')
 
