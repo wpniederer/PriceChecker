@@ -160,7 +160,7 @@ def discog_switches(line):
                     relevant_info = discogs.twitter_friendly_release(rando, search_results)
                     rando = random.randint(1, 2)
                     tweet.post_to_twitter_discogs_releases(relevant_info, rando, query)
-                    print(rando)
+                    #print(rando)
 
                 #print(relevant_info)
                 break

@@ -30,6 +30,7 @@ def post_to_twitter_discogs_album (info_to_post):
     artist = artist_album[0]
     album = artist_album[1]
     url = info_to_post[1]
+    print(url)
     #num_of_releases = info_to_post[2]
     twitter_client.PostUpdate('Someone searched for ' + artist + '! Here is some info about the ' + artist + ':\n'
                               + artist + ' has a release titled ' + album + '\n'
@@ -67,11 +68,14 @@ def post_to_twitter_ebay(search, info_to_post):
                               + 'Listing Title: ' + title + '\n'
                               + 'Listing Price: $' + price + '\n'
                               + url)
+def url_builder(post_id):
+    url = 'https://www.twitter.com/{user:}/status/{id:}'.format(user='VinylRecordBot', id=post_id)
+    return url
 
 def print_tweet_url():
     statuses = twitter_client.GetHomeTimeline(1)
     status = statuses[0]
-    print(status.urls)
+    print(url_builder(status.id_str))
 
 
 #twitter_client.PostUpdate("Bye Miss Chelsea!")
