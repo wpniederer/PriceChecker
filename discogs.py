@@ -110,10 +110,10 @@ def twitter_friendly_release(rando, search_results):
     relevant_info = []
 
     for release in islice(search_results, rando, rando + 1):
-        relevant_info.append(release.artists)
+        relevant_info.append((', '.join(artist.name for artist in release.artists)))
         relevant_info.append(release.title)
         if (release.year == 0):
-            relevant_info.append("NA")
+            relevant_info.append('NA')
         else:
             relevant_info.append(release.year)
         relevant_info.append(release.country)
@@ -131,11 +131,13 @@ def twitter_friendly(rando, search_type, search_results):
         for release in islice(search_results, rando, rando + 1):
             relevant_info.append(release.title)
             relevant_info.append(url_builder(release.id, 'master'))
+            #relevant_info.append(len(search_results))
 
     if (search_type == 'album'):
         for release in islice(search_results, rando, rando + 1):
             relevant_info.append(release.title)
             relevant_info.append(url_builder(release.id, 'master'))
+            #relevant_info.append(len(search_results))
 
     #print(relevant_info)
     return relevant_info

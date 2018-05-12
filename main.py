@@ -89,7 +89,7 @@ def ebay_switches(line):
             try:
                 rando = random.randint(0, num_to_print - 1)
                 relevant_info = ebay.twitter_friendly(rando, search_results)
-                tweet.post_to_twitter(query, relevant_info)
+                tweet.post_to_twitter_ebay(query, relevant_info)
                 break;
             except IndexError:
                 print('invalid index, trying again...')
@@ -154,16 +154,23 @@ def discog_switches(line):
                 if (search_type is not None):
                     rando = random.randint(0, len(search_results) - 1)
                     relevant_info = discogs.twitter_friendly(rando, search_type, search_results)
-                    # tweet.post_to_twitter(query, relevant_info)
+                    tweet.post_to_twitter_discogs_album(relevant_info)
                 else:
                     rando = random.randint(0, len(search_results) - 1)
                     relevant_info = discogs.twitter_friendly_release(rando, search_results)
+                    rando = random.randint(1, 2)
+                    tweet.post_to_twitter_discogs_releases(relevant_info, rando, query)
+                    print(rando)
 
-                print(relevant_info)
+                #print(relevant_info)
                 break
             except IndexError:
                 print('invalid index, trying again...')
 
+
+        time.sleep(2)
+        print("Posted to twitter, link to post: ")
+        tweet.print_tweet_url()
 
 
 def help_switch(line):

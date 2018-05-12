@@ -25,19 +25,41 @@ twitter_client = twitter.Api(consumer_key=c_key,
                            access_token_secret=t_secret)
 
 
-def post_to_twitter(artist, message, album):
-    try:
-        if (album is None):
-            twitter_client.PostUpdate("Did message")
-        elif (album is not None):
-            twitter_client.PostUpdate()
-        else:
-            print("Error related to album is none")
-    except:
-        print("Error in posting to VinylRecordBot twitter")
+def post_to_twitter_discogs_album (info_to_post):
+    artist_album = info_to_post[0].split('-')
+    artist = artist_album[0]
+    album = artist_album[1]
+    url = info_to_post[1]
+    #num_of_releases = info_to_post[2]
+    twitter_client.PostUpdate('Someone searched for ' + artist + '! Here is some info about the ' + artist + ':\n'
+                              + artist + ' has a release titled ' + album + '\n'
+                              + url)
 
 
-def post_to_twitter(search, info_to_post):
+def post_to_twitter_discogs_releases(info_to_post, rando, query):
+    query = query.split('|')
+    artist = query[0]
+    album = query[1]
+    year = str(info_to_post[2])
+    country = info_to_post[3]
+    url = info_to_post[4]
+    num_of_releases = str(info_to_post[5])
+    #print(info_to_post)
+
+    if (rando == 1):
+        twitter_client.PostUpdate(
+            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '! Here is some info about one of the releases:\n'
+            + 'This particular release of ' + album + ' was released in the year ' + year + ' in ' + country + '\n'
+            + url)
+
+    if (rando == 2):
+        twitter_client.PostUpdate(
+            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '! Here is some info about the album:\n'
+            + album + ' had ' + num_of_releases + ' rereleases.\n'
+            + 'Here is a link to one of the releases:\n' + url)
+
+
+def post_to_twitter_ebay(search, info_to_post):
     title = info_to_post[0]
     price = info_to_post[1]
     url = info_to_post[2]
