@@ -28,11 +28,13 @@ twitter_client = twitter.Api(consumer_key=c_key,
 def post_to_twitter_discogs_album (info_to_post):
     artist_album = info_to_post[0].split('-')
     artist = artist_album[0]
+    artist = artist[:-1]
+
     album = artist_album[1]
+    album = album[1:]
     url = info_to_post[1]
-    print(url)
     #num_of_releases = info_to_post[2]
-    twitter_client.PostUpdate('Someone searched for ' + artist + '! Here is some info about the ' + artist + ':\n'
+    twitter_client.PostUpdate('Someone searched for ' + artist + '! Here is some info about ' + artist + ':\n'
                               + artist + ' has a release titled ' + album + '\n'
                               + url)
 
