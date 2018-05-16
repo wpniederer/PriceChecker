@@ -1,11 +1,11 @@
 import discogs_client
 from discogs_client import exceptions
 from itertools import islice
-import config
+import keys
 import time
 
 user_agent = 'PriceChecker/1.0' '+https://github.com/wpniederer/PriceChecker'
-utoken = config.discogs_user_token
+utoken = keys.discogs_user_token
 discogsclient = discogs_client.Client(user_agent, user_token=utoken)
 sleep_time = 2
 

@@ -126,16 +126,16 @@ def discog_switches(line):
         search_results = search_results_album
         search_type = 'album'
 
-    elif search_results_ep is not None:
+    if search_results_ep is not None:
         discogs.ep_printer(query, search_results_ep)
         search_results = search_results_ep
         search_type = 'EP'
 
-    elif search_results_ww is not None:
+    if search_results_ww is not None:
         discogs.record_printer(query.split('|'), search_results_ww, num_to_print)
         search_results = search_results_ww
 
-    elif search_results_us is not None:
+    if search_results_us is not None:
         discogs.record_printer(query.split('|'), search_results_us, num_to_print)
         search_results = search_results_us
 
@@ -181,3 +181,4 @@ if len(user_input) == 1:
 
 else:
     print('Invalid input, too many lines')
+

@@ -1,8 +1,8 @@
-import config
+import keys
 from ebaysdk.finding import Connection as Finding
 from itertools import islice
 
-app_id = config.ebay_app_id
+app_id = keys.ebay_app_id
 
 
 def search_printer(search, search_results):

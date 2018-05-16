@@ -1,11 +1,11 @@
 import twitter
-import config
+import keys
 
 
-c_key = config.twitter_consumer_key
-c_secret = config.twitter_consumer_secret
-t_key = config.twitter_token_key
-t_secret = config.twitter_token_secret
+c_key = keys.twitter_consumer_key
+c_secret = keys.twitter_consumer_secret
+t_key = keys.twitter_token_key
+t_secret = keys.twitter_token_secret
 
 twitter_client = twitter.Api(consumer_key=c_key,
                            consumer_secret=c_secret,
