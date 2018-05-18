@@ -34,11 +34,11 @@ def get_switches(line):
     elif line[1] == '--ebay':
         ebay_switches(line)
     elif line[1] == '--help':
-        help_switch(line)
+        help_switch()
     elif line[1] == '--synopsis':
-        synopsis_switch(line)
+        synopsis_switch()
     elif line[1] == '--bat':
-        bat_switch(line)
+        bat_switch()
     else:
         print("Invalid switch or invalid format for input")
 
@@ -88,14 +88,14 @@ def ebay_switches(line):
                 print('invalid index, trying again...')
 
         time.sleep(2)
-        print("Posted to twitter, link: ")
+        print("Posted to twitter, link to post: ")
         twitter.print_tweet_url()
 
 
 def discog_switches(line):
     query = line[0]
     switch_list = line[2:]
-    num_to_print = 50
+    num_to_print = 59
     tweet = False
     search_results_ep = None
     search_results_album = None
@@ -109,7 +109,7 @@ def discog_switches(line):
             if num_to_print >= 60:
                 print("A value to print greater than 60 will cause discogs to reject your request. Setting to 50....")
                 time.sleep(2)
-                num_to_print = 50
+                num_to_print = 59
         elif switch == '-album':
             search_results_album = discogs.discogs_album_search(query)
         elif switch == '-ep':
@@ -162,15 +162,74 @@ def discog_switches(line):
         twitter.print_tweet_url()
 
 
-def help_switch(line):
-    print()
+def help_switch():
+    print('\n\nFor Discogs: \n'
+            + '--------------------------------------------------------------------------------------------------\n'
+            + 'Artist search: artist name --discogs -ep/-album --tweet\n'
+            + '==================================================================================================\n'
+            + 'Artist search will find the ablums and/or eps for a given artist.\n'
+            + 'Required: discogs switch and either album or ep (or both) switch are required \n'
+            + 'Optional: tweet switch is optional (posts some info about the search to twitter). \n'
+            + 'Example search: The Strokes --discogs -album --tweet\n'
+            + '==================================================================================================\n'
+            + 'Vinyl record release search: artist name|album/ep --discogs -rUS/-rWW to search from -n # --tweet\n'
+            + '==================================================================================================\n'
+            + 'Record release search will find up to 60 releases of a particular album/ep (limit of 60 due to\n'
+            + '         discogs api request limiter).\n'
+            + 'Required: --discogs and either -rWW or -rUS (but not both!)\n'
+            + '     -rWW will search for releases both internationally and in the US\n'
+            + '     -rUS will search for releases only in the US\n'
+            + 'Optional: -n # and --tweet\n'
+            + '     -n # sets the number to of results to print\n'
+            + '     --tweet will post some info about the search to twitter\n'
+            + 'Example search: The Strokes|Is This It --discogs -rWW -n 10 --tweet')
+
+    print('\nFor eBay: \n'
+          + '--------------------------------------------------------------------------------------------------\n'
+          + 'search query --ebay -switches --tweet\n'
+          + '==================================================================================================\n'
+          + 'eBay search will search ebay for the given query and filter it based on the given parameters.\n'
+          + 'Switches (none are required, I was able to set defaults for the ebay api):\n'
+          + '       -n # for number to print (limit of 100 due to api)\n'
+          + '       -max # for max price\n'
+          + '       -min # for min price\n'
+          + '       -used for used vinyls\n'
+          + '       -ww for an international search\n'
+          + '       --tweet will post some info about the search to twitter\n'
+          + ' Defaults are 20 for max, 10 for min, 30 to print, search limited to North America, and new\n'
+          + 'Example search: Pink Floyd The Wall --ebay -ww -max 1000 --tweet')
+
+    print('\nThings to  Note: \n'
+          + '--------------------------------------------------------------------------------------------------\n'
+          + 'This program works with two lines, either discogs search or ebay search AND .eot. So it is\n'
+          + '       a one line program. You CANNOT search both at once.\n'
+          + 'I have caught as many errors as I could find, however it is best to stick to the given format for\n'
+          + '       all the searches, and please do not push the limits of the API limiters\n'
+          + 'Have fun! I put a lot of work into this project, and I am very proud of it. This actually ended up\n'
+          + '       being a prototype for the search function I want to implement on my website (building it\n'
+          + '       this summer) and it really helped me get familiar with the APIs I plan to use.\n'
+          + '       This is definitely my favorite programming project in my college career, and I actually use\n'
+          + '       this program to do quick searches for releases and searching ebay.\n')
+
+    print('\nInfo: \n'
+          + '--------------------------------------------------------------------------------------------------\n'
+          + 'Version        : 1.0.0\n'
+          + 'Dependencies   : ebaysdk - for searching ebay\n'
+          + '                 discogs-client - for searching discogs\n'
+          + '                 python-twitter - for posting to twitter\n'
+          + '                 Python3.6 - I used several functions exclusive to this version of python.\n'
+          + '                 There are more dependencies that those three require, but they should be \n'
+          + '                   downloaded with the APIs. Look at requirements.txt for a complete list \n'
+          + '                   of all the dependencies I needed to run this project.\n'
+          + 'Author         : Niederer, Walter \n'
+          + 'Contact        : wpniederer@gmail.com\n'
+          + 'github         : https://github.com/wpniederer/PriceChecker \n')
+
+def synopsis_switch():
+    print('\nSearches either ebay or discogs for relevant info and then posts info related to search to twitter.\n')
 
 
-def synopsis_switch(line):
-    print()
-
-
-def bat_switch(line):
+def bat_switch():
     print()
 
 
