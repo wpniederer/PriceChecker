@@ -16,64 +16,78 @@ def url_builder(discogs_id, r_type):
 
 
 def album_printer(query, search_results):
-    print('\n{:=^135}'.format('Albums by ' + query))
-    print('{:^90}|{:^45}'.format('Album', 'Link'))
-    print('{:-^135}'.format('-'))
+    if len(search_results) == 0:
+        print("No results for " + query)
 
-    for release in search_results:
-        print('{album:90}|'.format(album=release.title), end='')
-        print('{url:45}'.format(url=url_builder(release.id, 'master')))
-    print('{:-^135}'.format('-'))
+    else:
+        print('\n{:=^135}'.format('Albums by ' + query))
+        print('{:^90}|{:^45}'.format('Album', 'Link'))
+        print('{:-^135}'.format('-'))
+
+        for release in search_results:
+            print('{album:90}|'.format(album=release.title), end='')
+            print('{url:45}'.format(url=url_builder(release.id, 'master')))
+        print('{:-^135}'.format('-'))
+
 
 
 def ep_printer(query, search_results):
-    print('\n{:=^135}'.format('EPs by ' + query))
-    print('{:^90}|{:^45}'.format('EP', 'Link'))
-    print('{:-^135}'.format('-'))
+    if len(search_results) == 0:
+        print("No results for " + query)
 
-    for release in search_results:
-        print('{album:90}|'.format(album=release.title), end='')
-        print('{url:45}'.format(url=url_builder(release.id, 'master')))
-    print('{:-^135}'.format('-'))
+    else:
+        print('\n{:=^135}'.format('EPs by ' + query))
+        print('{:^90}|{:^45}'.format('EP', 'Link'))
+        print('{:-^135}'.format('-'))
+
+        for release in search_results:
+            print('{album:90}|'.format(album=release.title), end='')
+            print('{url:45}'.format(url=url_builder(release.id, 'master')))
+        print('{:-^135}'.format('-'))
 
 
 def record_printer(query, search_results, num_to_print):
-    print('\n{:=^120}'.format('Releases of ' + query[1] + ' by ' + query[0]))
-    print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
-          .format('Artist', 'Album', 'Year', 'Country', 'Link'))
-    print('{:-^120}'.format('-'))
+    if len(search_results) == 0:
+        print("No results for " + query[1] + " by " + query[0])
 
-    for release in islice(search_results, num_to_print):
-        try:
-            print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
-            print('{album:20}|'.format(album=release.title), end='')
-            if release.year == 0:
-                print('{message:^14}|'.format(message='Year not given'), end='')
-            else:
-                print('{year:^14}|'.format(year=release.year), end='')
-            print('{country:^9}|'.format(country=release.country), end='')
-            print('{url:45}'.format(url=url_builder(release.id, 'release')))
+    else:
+        print('\n{:=^120}'.format('Releases of ' + query[1] + ' by ' + query[0]))
+        print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
+              .format('Artist', 'Album', 'Year', 'Country', 'Link'))
+        print('{:-^120}'.format('-'))
 
-        except exceptions.HTTPError:
-            #user_input2 = input("\nMaxed out number of requests that can be made in a minute...(w)ait or (e)xit: ")
-            user_input2 = 'e'
+        for release in islice(search_results, num_to_print):
+            try:
+                print('{artist:20}|'.format(artist=', '.join(artist.name for artist in release.artists)), end='')
+                print('{album:20}|'.format(album=release.title), end='')
+                if release.year == 0:
+                    print('{message:^14}|'.format(message='Year not given'), end='')
+                else:
+                    print('{year:^14}|'.format(year=release.year), end='')
+                print('{country:^9}|'.format(country=release.country), end='')
+                print('{url:45}'.format(url=url_builder(release.id, 'release')))
 
-            if user_input2 == 'w':
-                print('\nWaiting 61 seconds\n')
-                time.sleep(61)
+            except exceptions.HTTPError:
+                # user_input2 = input("\nMaxed out number of requests that can be made in a minute...(w)ait or (e)xit: ")
+                user_input2 = 'e'
 
-                print('\n{:=^120}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
-                print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
-                      .format('Artist', 'Album', 'Year', 'Country', 'Link'))
-                print('{:-^120}'.format('-'))
-                continue
+                if user_input2 == 'w':
+                    print('\nWaiting 61 seconds\n')
+                    time.sleep(61)
 
-            else:
-                print('Maxed out number of requests that can be made in a minute, exiting....')
-                time.sleep(2)
-                break
+                    print('\n{:=^120}'.format('Releases of ' + user_input[1] + ' by ' + user_input[0]))
+                    print('{:^20s}|{:^20s}|{:^14s}|{:^9s}|{:^45s}'
+                          .format('Artist', 'Album', 'Year', 'Country', 'Link'))
+                    print('{:-^120}'.format('-'))
+                    continue
 
-    print('{:-^120}'.format('-'))
+                else:
+                    print('Maxed out number of requests that can be made in a minute, exiting....')
+                    time.sleep(2)
+                    break
+
+        print('{:-^120}'.format('-'))
+
 
 
 # Artist - album search

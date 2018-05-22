@@ -23,48 +23,53 @@ def add_the(country):
 
 
 def tweet_discogs_albums(info_to_post):
-    artist_album = info_to_post[0].split('-')
-    artist = artist_album[0]
-    artist = artist[:-1]
+    if len(info_to_post) > 0:
+        artist_album = info_to_post[0].split('-')
+        artist = artist_album[0]
+        artist = artist[:-1]
 
-    album = artist_album[1]
-    album = album[1:]
-    url = info_to_post[1]
-    twitter_client.PostUpdate('Someone searched for ' + artist + '!\n'
-                               'They have a release titled ' + album + '.\n'
-                              + url)
+        album = artist_album[1]
+        album = album[1:]
+        url = info_to_post[1]
+        twitter_client.PostUpdate('Someone searched for ' + artist + '!\n'
+                                  'They have a release titled ' + album + '.\n'
+                                  + url)
 
 
 def tweet_discogs_releases(info_to_post, rando, query):
-    query = query.split('|')
-    artist = query[0]
-    album = query[1]
-    year = str(info_to_post[2])
-    country = info_to_post[3]
-    url = info_to_post[4]
-    num_of_releases = str(info_to_post[5])
+    if len(info_to_post) > 0:
+        query = query.split('|')
+        artist = query[0]
+        album = query[1]
+        year = str(info_to_post[2])
+        country = info_to_post[3]
+        url = info_to_post[4]
+        num_of_releases = str(info_to_post[5])
 
-    if rando == 1:
-        twitter_client.PostUpdate(
-            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
-            + 'This particular release of ' + album + ' was released in the year ' + year + ' in ' + add_the(country) + '.\n'
-            + url)
+        if rando == 1:
+            twitter_client.PostUpdate(
+                'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
+                + 'This particular release of ' + album + ' was released in the year ' + year + ' in ' + add_the(
+                    country) + '.\n'
+                + url)
 
-    elif rando == 2:
-        twitter_client.PostUpdate(
-            'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
-            + album + ' has ' + num_of_releases + ' rereleases.\n'
-            + 'Check out this release on discogs!\n' + url)
+        elif rando == 2:
+            twitter_client.PostUpdate(
+                'Someone searched for the vinyl record releases of ' + album + ' by ' + artist + '\n'
+                + album + ' has ' + num_of_releases + ' rereleases.\n'
+                + 'Check out this release on discogs!\n' + url)
 
 
 def tweet_ebay_search(search, info_to_post):
-    title = info_to_post[0]
-    price = info_to_post[1]
-    url = info_to_post[2]
-    twitter_client.PostUpdate('Someone searched for ' + search + '! Click the link to find it on eBay!\n'
-                              + 'Listing Title: ' + title + '\n'
-                              + 'Listing Price: $' + price + '\n'
-                              + url)
+    if info_to_post is not None:
+        title = info_to_post[0]
+        price = info_to_post[1]
+        url = info_to_post[2]
+        twitter_client.PostUpdate('Someone searched for ' + search + '! Click the link to find it on eBay!\n'
+                                  + 'Listing Title: ' + title + '\n'
+                                  + 'Listing Price: $' + price + '\n'
+                                  + url)
+
 def url_builder(post_id):
     url = 'https://www.twitter.com/{user:}/status/{id:}'.format(user='VinylRecordBot', id=post_id)
     return url

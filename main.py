@@ -85,11 +85,15 @@ def ebay_switches(line):
                 break;
 
             except IndexError:
-                print('invalid index, trying again...')
+                print(str(rando) + ' is not a valid index, trying again...')
 
-        time.sleep(2)
-        print("Posted to twitter, link to post: ")
-        twitter.print_tweet_url()
+        if relevant_info is None:
+            print("Nothing to post to twitter")
+
+        else:
+            time.sleep(2)
+            print("Posted to twitter, link to post: ")
+            twitter.print_tweet_url()
 
 
 def discog_switches(line):
@@ -140,26 +144,29 @@ def discog_switches(line):
         search_results = search_results_us
 
     if tweet is True:
-        while True:
-            try:
-                if search_type is not None:
-                    rando = random.randint(0, len(search_results) - 1)
-                    relevant_info = discogs.twitter_friendly(rando, search_type, search_results)
-                    twitter.tweet_discogs_albums(relevant_info)
-                else:
-                    rando = random.randint(0, len(search_results) - 1)
-                    relevant_info = discogs.twitter_friendly_release(rando, search_results)
-                    rando = random.randint(1, 2)
-                    twitter.tweet_discogs_releases(relevant_info, rando, query)
-                break
+        if len(search_results) > 0:
+            while True:
+                try:
+                    if search_type is not None:
+                        rando = random.randint(0, len(search_results) - 1)
+                        relevant_info = discogs.twitter_friendly(rando, search_type, search_results)
+                        twitter.tweet_discogs_albums(relevant_info)
+                    else:
+                        rando = random.randint(0, len(search_results) - 1)
+                        relevant_info = discogs.twitter_friendly_release(rando, search_results)
+                        rando = random.randint(1, 2)
+                        twitter.tweet_discogs_releases(relevant_info, rando, query)
+                    break
 
-            except IndexError:
-                print('invalid index, trying again...')
+                except IndexError:
+                    print(str(rando) + ' is not a valid index, trying again...')
 
+            time.sleep(2)
+            print("Posted to twitter, link to post: ")
+            twitter.print_tweet_url()
+        else:
+            print("Nothing to post to twitter")
 
-        time.sleep(2)
-        print("Posted to twitter, link to post: ")
-        twitter.print_tweet_url()
 
 
 def help_switch():
@@ -224,6 +231,7 @@ def help_switch():
           + 'Author         : Niederer, Walter \n'
           + 'Contact        : wpniederer@gmail.com\n'
           + 'github         : https://github.com/wpniederer/PriceChecker \n')
+
 
 def synopsis_switch():
     print('\nSearches either ebay or discogs for relevant info and then posts info related to search to twitter.\n')

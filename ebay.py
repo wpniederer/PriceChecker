@@ -6,22 +6,27 @@ app_id = keys.ebay_app_id
 
 
 def search_printer(search, search_results):
-    print('\n{:=^170}'.format('Search results for ' + search))
-
-    for item in search_results['searchResult']['item']:
-        print('Title: {}'.format(item['title']))
-        print('Price: ${}'.format(item['sellingStatus']['convertedCurrentPrice']['value']))
-        print('URL: {}'.format(item['viewItemURL']))
-        print('{:-^170}'.format('-'))
+    try:
+        print('\n{:=^170}'.format('Search results for ' + search))
+        for item in search_results['searchResult']['item']:
+            print('Title: {}'.format(item['title']))
+            print('Price: ${}'.format(item['sellingStatus']['convertedCurrentPrice']['value']))
+            print('URL: {}'.format(item['viewItemURL']))
+            print('{:-^170}'.format('-'))
+    except KeyError:
+        print("\n No results for " + search)
 
 
 def twitter_friendly(rando, search_results):
-    relevant_info = []
-    for item in islice(search_results['searchResult']['item'], rando, rando + 1):
-        relevant_info.append(item['title'])
-        relevant_info.append(item['sellingStatus']['convertedCurrentPrice']['value'])
-        relevant_info.append(item['viewItemURL'])
-    return relevant_info
+    try:
+        relevant_info = []
+        for item in islice(search_results['searchResult']['item'], rando, rando + 1):
+            relevant_info.append(item['title'])
+            relevant_info.append(item['sellingStatus']['convertedCurrentPrice']['value'])
+            relevant_info.append(item['viewItemURL'])
+        return relevant_info
+    except KeyError:
+        return None
 
 
 def ebay_search(search, max_price, min_price, condition, num_to_print, located_in):
