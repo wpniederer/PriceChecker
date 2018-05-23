@@ -90,7 +90,7 @@ def ebay_switches(line):
                 rando = random.randint(0, num_to_print - 1)
                 relevant_info = ebay.twitter_friendly(rando, search_results)
                 twitter.tweet_ebay_search(query, relevant_info)
-                break;
+                break
 
             except IndexError:
                 print(str(rando) + ' is not a valid index, trying again...')
@@ -116,6 +116,7 @@ def discog_switches(line):
     switch_list = line[2:]
     num_to_print = 59
     tweet = False
+    bat = False
     search_results_ep = None
     search_results_album = None
     search_results_ww = None
