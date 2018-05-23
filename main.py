@@ -8,7 +8,7 @@ import random
 def get_input():
     user_input = []
     while True:
-        one_line = input()
+        one_line = input().strip()
         if one_line and one_line != '.eot':
             user_input.append(one_line)
         if one_line == '.eot':
@@ -26,6 +26,7 @@ def parse_input(input, line_n):
         return line
     else:
         print('Invalid line')
+        quit(1)
 
 
 def get_switches(line):
@@ -37,15 +38,18 @@ def get_switches(line):
         help_switch()
     elif line[1] == '--synopsis':
         synopsis_switch()
-    elif line[1] == '--bat':
-        bat_switch()
     else:
         print("Invalid switch or invalid format for input")
+        quit(2)
 
 
 def getswitch_modifier(line, switch):
     modifer_index = line.index(switch)
-    return int(line[modifer_index + 1])
+    try:
+        return line[modifer_index + 1]
+    except IndexError:
+        print('Incorrect input. Did you forget to give a modifier for max/min/bat/n/etc?')
+        quit(3)
 
 
 def ebay_switches(line):
@@ -57,10 +61,11 @@ def ebay_switches(line):
     min = 10
     located_in = 'North America'
     tweet = False
+    bat = False
 
     for switch in switch_list:
         if switch == '-n':
-            num_to_print = getswitch_modifier(switch_list, '-n')
+            num_to_print = int(getswitch_modifier(switch_list, '-n'))
             # print(num_to_print)
         elif switch == '-used':
             condition = 'Used'
@@ -72,6 +77,9 @@ def ebay_switches(line):
             located_in = 'WorldWide'
         elif switch == '--tweet':
             tweet = True
+        elif switch == '--bat':
+            bat = True
+            token = str(getswitch_modifier(switch_list, '--bat'))
 
     search_results = ebay.ebay_search(query, max, min, condition, num_to_print, located_in)
     ebay.search_printer(query, search_results)
@@ -95,6 +103,13 @@ def ebay_switches(line):
             print("Posted to twitter, link to post: ")
             twitter.print_tweet_url()
 
+    if bat is True:
+        token = token.split('.')
+        user_name = token[0]
+        hash = token[1]
+        print("Username: " + user_name)
+        print("Hash: " + hash)
+
 
 def discog_switches(line):
     query = line[0]
@@ -109,7 +124,7 @@ def discog_switches(line):
 
     for switch in switch_list:
         if switch == '-n':
-            num_to_print = getswitch_modifier(switch_list, '-n')
+            num_to_print = int(getswitch_modifier(switch_list, '-n'))
             if num_to_print >= 60:
                 print("A value to print greater than 60 will cause discogs to reject your request. Setting to 50....")
                 time.sleep(2)
@@ -124,6 +139,9 @@ def discog_switches(line):
             search_results_us = discogs.discogs_record_search_us(query.split('|'))
         elif switch == '--tweet':
             tweet = True
+        elif switch == '--bat':
+            bat = True
+            token = str(getswitch_modifier(switch_list, '--bat'))
 
     if search_results_album is not None:
         discogs.album_printer(query, search_results_album)
@@ -166,34 +184,43 @@ def discog_switches(line):
             twitter.print_tweet_url()
         else:
             print("Nothing to post to twitter")
+    if bat is True:
+        token = token.split('.')
+        user_name = token[0]
+        hash = token[1]
+        print("Username: " + user_name)
+        print("Hash: " + hash)
 
 
 
 def help_switch():
     print('\n\nFor Discogs: \n'
             + '--------------------------------------------------------------------------------------------------\n'
-            + 'Artist search: artist name --discogs -ep/-album --tweet\n'
+            + 'Artist search: artist name --discogs -ep/-album --tweet --bat username.hash\n'
             + '==================================================================================================\n'
             + 'Artist search will find the ablums and/or eps for a given artist.\n'
             + 'Required: discogs switch and either album or ep (or both) switch are required \n'
-            + 'Optional: tweet switch is optional (posts some info about the search to twitter). \n'
+            + 'Optional: --tweet and --bat username.hash\n'
+            + '     --tweet will post some info about the search to twitter\n'
+            + '     --bat username.hash currently returns username and hash\n'
             + 'Example search: The Strokes --discogs -album --tweet\n'
-            + '==================================================================================================\n'
-            + 'Vinyl record release search: artist name|album/ep --discogs -rUS/-rWW to search from -n # --tweet\n'
-            + '==================================================================================================\n'
+            + '=====================================================================================================================\n'
+            + 'Vinyl record release search: artist name|album/ep --discogs -rUS/-rWW to search from -n # --tweet --bat username.hash\n'
+            + '=====================================================================================================================\n'
             + 'Record release search will find up to 60 releases of a particular album/ep (limit of 60 due to\n'
             + '         discogs api request limiter).\n'
             + 'Required: --discogs and either -rWW or -rUS (but not both!)\n'
             + '     -rWW will search for releases both internationally and in the US\n'
             + '     -rUS will search for releases only in the US\n'
-            + 'Optional: -n # and --tweet\n'
+            + 'Optional: -n # and --tweet and --bat username.hash\n'
             + '     -n # sets the number to of results to print\n'
             + '     --tweet will post some info about the search to twitter\n'
+            + '     --bat username.hash currently returns username and hash\n'
             + 'Example search: The Strokes|Is This It --discogs -rWW -n 10 --tweet')
 
     print('\nFor eBay: \n'
           + '--------------------------------------------------------------------------------------------------\n'
-          + 'search query --ebay -switches --tweet\n'
+          + 'search query --ebay -switches --tweet --bat username.hash\n'
           + '==================================================================================================\n'
           + 'eBay search will search ebay for the given query and filter it based on the given parameters.\n'
           + 'Switches (none are required, I was able to set defaults for the ebay api):\n'
@@ -203,6 +230,7 @@ def help_switch():
           + '       -used for used vinyls\n'
           + '       -ww for an international search\n'
           + '       --tweet will post some info about the search to twitter\n'
+          + '       --bat username.hash currently returns username and hash\n'
           + ' Defaults are 20 for max, 10 for min, 30 to print, search limited to North America, and new\n'
           + 'Example search: Pink Floyd The Wall --ebay -ww -max 1000 --tweet')
 
@@ -235,10 +263,6 @@ def help_switch():
 
 def synopsis_switch():
     print('\nSearches either ebay or discogs for relevant info and then posts info related to search to twitter.\n')
-
-
-def bat_switch():
-    print()
 
 
 user_input = get_input()
