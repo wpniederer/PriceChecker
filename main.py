@@ -239,14 +239,7 @@ def help_switch():
           + '--------------------------------------------------------------------------------------------------\n'
           + 'This program works with two lines, either discogs search or ebay search AND .eot. So it is\n'
           + '       a one line program. You CANNOT search both at once.\n'
-          + 'I have caught as many errors as I could find, however it is best to stick to the given format for\n'
-          + '       all the searches, and please do not push the limits of the API limiters\n'
-          + 'Have fun! I put a lot of work into this project, and I am very proud of it. This actually ended up\n'
-          + '       being a prototype for the search function I want to implement on my website (building it\n'
-          + '       this summer) and it really helped me get familiar with the APIs I plan to use.\n'
-          + '       This is definitely my favorite programming project in my college career, and I actually use\n'
-          + '       this program to do quick searches for releases and searching ebay.\n')
-
+          
     print('\nInfo: \n'
           + '--------------------------------------------------------------------------------------------------\n'
           + 'Version        : 1.0.0\n'
